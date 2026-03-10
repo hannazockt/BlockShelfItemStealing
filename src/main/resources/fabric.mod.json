@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "blockshelfitemstealing",
+  "version": "${version}",
+  "name": "blockShelfItemStealing",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/blockshelfitemstealing/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-datagen": [
+      "de.hannazockt.blockshelfitemstealing.client.BlockshelfitemstealingDataGenerator"
+    ],
+    "client": [
+      "de.hannazockt.blockshelfitemstealing.client.BlockshelfitemstealingClient"
+    ],
+    "main": [
+      "de.hannazockt.blockshelfitemstealing.Blockshelfitemstealing"
+    ]
+  },
+  "mixins": [
+    "blockshelfitemstealing.mixins.json",
+    {
+      "config": "blockshelfitemstealing.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": ">=${minecraft_version}"
+  }
+}
