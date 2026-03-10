@@ -3,7 +3,7 @@
   "key.blockshelfitemstealing.bypass": "Bypass Shelf Protection",
   "blockshelfitemstealing.message.blocked": "§6Shelf interaction blocked!",
   "blockshelfitemstealing.message.blocked.powered": "§6Redstone powered shelf interaction blocked!",
-  "blockshelfitemstealing.message.blocked.inv_steal": "§6Shelf tried to steal your hotbar – blocked!",
+  "blockshelfitemstealing.message.blocked.inv_steal": "§6Shelf tried to swap your hotbar – blocked!",
   "blockshelfitemstealing.message.blocked.hint": " §7(Hold %s to bypass)",
   "blockshelfitemstealing.message.bypass.active": "§eBypassing shelf protection..."
 }
