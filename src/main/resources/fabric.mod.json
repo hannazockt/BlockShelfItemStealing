@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "id": "blockshelfitemstealing",
   "version": "${version}",
-  "name": "blockShelfItemStealing",
-  "description": "",
-  "authors": [],
+  "name": "Block Shelf Item Stealing",
+  "description": "Prevents item stealing from shelves by blocking interactions when the shelf is powered or when it tries to steal items from the player's hotbar.",
+  "authors": ["HannaZockt"],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/blockshelfitemstealing/icon.png",
+  "icon": "icon/icon.png",
   "environment": "client",
   "entrypoints": {
     "fabric-datagen": [

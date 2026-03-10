@@ -48,13 +48,17 @@ public class ShelfDetector {
             // Search for other shelves in all 6 directions
             for (Direction dir : Direction.values()) {
                 BlockPos neighbor = current.offset(dir);
-                if (!visited.contains(neighbor)) {
-                    if (isShelf(world.getBlockState(neighbor))) {
-                        visited.add(neighbor);
-                        queue.add(neighbor);
-                    }
-                }
+
+                if (visited.contains(neighbor)) continue;
+
+                BlockState neighborState = world.getBlockState(neighbor);
+                if (!isShelf(neighborState)) continue;
+                if (!world.isReceivingRedstonePower(neighbor)) continue;
+
+                visited.add(neighbor);
+                queue.add(neighbor);
             }
+
         }
 
         return false;

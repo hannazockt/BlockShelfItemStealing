@@ -2,7 +2,7 @@
   "key.blockshelfitemstealing.main": "BlockShelfItemStealing",
   "key.blockshelfitemstealing.bypass": "Regalschutz umgehen",
   "blockshelfitemstealing.message.blocked": "§6Regal-Interaktion blockiert!",
-  "blockshelfitemstealing.message.blocked.powered": "§6Redstone aktiviertes Regal-Interaktion blockiert!",
+  "blockshelfitemstealing.message.blocked.powered": "§6Redstone aktivierte Regal-Interaktion blockiert!",
   "blockshelfitemstealing.message.blocked.inv_steal": "§6Regal versucht dein Inventar zu tauschen – Blockiert!",
   "blockshelfitemstealing.message.blocked.hint": " §7(%s gedrückt halten zum Umgehen)",
   "blockshelfitemstealing.message.bypass.active": "§eRegalschutz wird umgangen..."
