@@ -33,7 +33,7 @@ public class ClientPlayerInteractionMixin {
         var state = world.getBlockState(pos);
 
         if (ShelfDetector.isShelf(state)) {
-            boolean block = ShelfInteractionHandler.handleInteraction(world, pos, state, player);
+            boolean block = ShelfInteractionHandler.handleInteraction(world, pos, player);
             if (block) {
                 cir.setReturnValue(ActionResult.FAIL);
             }

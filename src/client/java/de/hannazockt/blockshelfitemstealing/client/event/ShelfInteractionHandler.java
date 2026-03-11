@@ -6,6 +6,7 @@ import de.hannazockt.blockshelfitemstealing.client.util.ShelfDetector;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -43,7 +44,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
             return ActionResult.PASS;
         }
 
-        boolean blocked = handleInteraction(world, hitResult.getBlockPos(), state, player);
+        boolean blocked = handleInteraction(world, hitResult.getBlockPos(), player);
 
         return blocked ? ActionResult.FAIL : ActionResult.PASS;
     }
@@ -53,8 +54,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
      * @return true if interaction should be blocked
      */
     public static boolean handleInteraction(World world,
-                                            net.minecraft.util.math.BlockPos pos,
-                                            net.minecraft.block.BlockState state,
+                                            BlockPos pos,
                                             PlayerEntity player) {
 
         // Return false if protection is disabled
