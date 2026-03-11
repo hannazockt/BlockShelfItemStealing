@@ -31,7 +31,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
 
-        // Check if is a client
+        // Only run on the client
         if (!world.isClient()) {
             return ActionResult.PASS;
         }
