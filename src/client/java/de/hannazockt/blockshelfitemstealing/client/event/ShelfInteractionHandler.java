@@ -64,8 +64,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
 
         // Bypass key logic
         if (ModKeyBindings.bypassKey.isPressed()) {
-            sendCooldownMessage(player,
-                    Text.translatable("blockshelfitemstealing.message.bypass.active"));
+            sendCooldownMessage(Text.translatable("blockshelfitemstealing.message.bypass.active"));
             return false;
         }
 
@@ -92,7 +91,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
                 keyName
         ));
 
-        sendCooldownMessage(player, message);
+        sendCooldownMessage(message);
 
         return true;
     }
@@ -124,7 +123,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
         };
     }
 
-    private static void sendCooldownMessage(PlayerEntity player, Text message) {
+    private static void sendCooldownMessage(Text message) {
 
         long now = System.currentTimeMillis();
 
