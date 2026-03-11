@@ -20,7 +20,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
 
     private static long lastMessageTime = 0;
     private static final long COOLDOWN_MS = 2000;
-			private static final String BLOCKED_MESSAGE_KEY = "blockshelfitemstealing.message.blocked";
+    private static final String BLOCKED_MESSAGE_KEY = "blockshelfitemstealing.message.blocked";
 
     private enum BlockReason {
         NORMAL,
