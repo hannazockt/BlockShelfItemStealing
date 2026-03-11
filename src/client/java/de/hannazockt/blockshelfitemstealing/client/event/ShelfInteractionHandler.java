@@ -20,6 +20,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
 
     private static long lastMessageTime = 0;
     private static final long COOLDOWN_MS = 2000;
+			private static final String BLOCKED_MESSAGE_KEY = "blockshelfitemstealing.message.blocked";
 
     private enum BlockReason {
         NORMAL,
@@ -87,7 +88,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
                 .getString();
 
         message.append(Text.translatable(
-                "blockshelfitemstealing.message.blocked.hint",
+                BLOCKED_MESSAGE_KEY + ".hint",
                 keyName
         ));
 
@@ -113,13 +114,13 @@ public class ShelfInteractionHandler implements UseBlockCallback {
 
         return switch (reason) {
             case POWERED_SUSPICIOUS ->
-                    Text.translatable("blockshelfitemstealing.message.blocked.inv_steal").copy();
+                    Text.translatable(BLOCKED_MESSAGE_KEY + ".inv_steal").copy();
 
             case POWERED ->
-                    Text.translatable("blockshelfitemstealing.message.blocked.powered").copy();
+                    Text.translatable(BLOCKED_MESSAGE_KEY + ".powered").copy();
 
             case NORMAL ->
-                    Text.translatable("blockshelfitemstealing.message.blocked").copy();
+                    Text.translatable(BLOCKED_MESSAGE_KEY).copy();
         };
     }
 
