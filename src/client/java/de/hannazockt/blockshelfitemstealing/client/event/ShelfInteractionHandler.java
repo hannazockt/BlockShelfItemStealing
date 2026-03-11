@@ -17,10 +17,10 @@ import net.minecraft.world.World;
  * Primary interception layer using Fabric API UseBlockCallback.
  */
 public class ShelfInteractionHandler implements UseBlockCallback {
+
     private static long lastMessageTime = 0;
     private static final long COOLDOWN_MS = 2000;
 
-    // Helper enum for the switch statement to determine the message type
     private enum BlockReason {
         NORMAL,
         POWERED,
@@ -29,70 +29,112 @@ public class ShelfInteractionHandler implements UseBlockCallback {
 
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-        if (!world.isClient()) return ActionResult.PASS;
+
+        // Check if is a client
+        if (!world.isClient()) {
+            return ActionResult.PASS;
+        }
 
         var state = world.getBlockState(hitResult.getBlockPos());
 
+        // Shelf check
         if (!ShelfDetector.isShelf(state)) {
             return ActionResult.PASS;
         }
 
-        return handleInteraction(world, hitResult.getBlockPos(), state, player)
-                ? ActionResult.FAIL
-                : ActionResult.PASS;
+        boolean blocked = handleInteraction(world, hitResult.getBlockPos(), state, player);
+
+        return blocked ? ActionResult.FAIL : ActionResult.PASS;
     }
 
     /**
-     * Checks logic and sends actionbar messages. Returns true if interaction should be blocked.
+     * Main protection logic.
+     * @return true if interaction should be blocked
      */
-    public static boolean handleInteraction(World world, net.minecraft.util.math.BlockPos pos, net.minecraft.block.BlockState state, PlayerEntity player) {
+    public static boolean handleInteraction(World world,
+                                            net.minecraft.util.math.BlockPos pos,
+                                            net.minecraft.block.BlockState state,
+                                            PlayerEntity player) {
+
+        // Return false if protection is disabled
         if (ModConfig.currentMode == ModConfig.ProtectionMode.DISABLED) {
             return false;
         }
 
-        boolean bypassHeld = ModKeyBindings.bypassKey.isPressed();
-        boolean isPowered = world.isReceivingRedstonePower(pos);
-        boolean isSuspicious = ShelfDetector.isSuspiciousShelfSystem(world, pos);
-
-        if (bypassHeld) {
-            sendCooldownMessage(player, Text.translatable("blockshelfitemstealing.message.bypass.active"));
+        // Bypass key logic
+        if (ModKeyBindings.bypassKey.isPressed()) {
+            sendCooldownMessage(player,
+                    Text.translatable("blockshelfitemstealing.message.bypass.active"));
             return false;
         }
 
-        boolean shouldBlock = (ModConfig.currentMode == ModConfig.ProtectionMode.BLOCK_ALL) ||
-                (ModConfig.currentMode == ModConfig.ProtectionMode.BLOCK_POWERED_ONLY && isPowered);
+        boolean isPowered = world.isReceivingRedstonePower(pos);
 
-        if (shouldBlock) {
-            // Determine the reason for blocking to pick the right text
-            BlockReason reason;
-            if (isPowered) {
-                reason = isSuspicious ? BlockReason.POWERED_SUSPICIOUS : BlockReason.POWERED;
-            } else {
-                reason = BlockReason.NORMAL;
-            }
-
-            // Select the appropriate message based on the reason
-            MutableText msgText = switch (reason) {
-                case POWERED_SUSPICIOUS -> Text.translatable("blockshelfitemstealing.message.blocked.inv_steal").copy();
-                case POWERED -> Text.translatable("blockshelfitemstealing.message.blocked.powered").copy();
-                case NORMAL -> Text.translatable("blockshelfitemstealing.message.blocked").copy();
-            };
-
-            String keyName = ModKeyBindings.bypassKey.getBoundKeyLocalizedText().getString();
-            msgText.append(Text.translatable("blockshelfitemstealing.message.blocked.hint", keyName));
-
-            sendCooldownMessage(player, msgText);
-            return true;
+        // Powered only mode check
+        if (ModConfig.currentMode == ModConfig.ProtectionMode.BLOCK_POWERED_ONLY && !isPowered) {
+            return false;
         }
 
-        return false;
+						// Check if 3 powered shelfs are besides each other to check if it would steal your entire hotbar
+        boolean isSuspicious = ShelfDetector.isSuspiciousShelfSystem(world, pos);
+
+        BlockReason reason = determineReason(isPowered, isSuspicious);
+
+        MutableText message = createBlockMessage(reason);
+
+        String keyName = ModKeyBindings.bypassKey
+                .getBoundKeyLocalizedText()
+                .getString();
+
+        message.append(Text.translatable(
+                "blockshelfitemstealing.message.blocked.hint",
+                keyName
+        ));
+
+        sendCooldownMessage(player, message);
+
+        return true;
+    }
+
+    private static BlockReason determineReason(boolean powered, boolean suspicious) {
+
+        if (!powered) {
+            return BlockReason.NORMAL;
+        }
+
+        if (suspicious) {
+            return BlockReason.POWERED_SUSPICIOUS;
+        }
+
+        return BlockReason.POWERED;
+    }
+
+    private static MutableText createBlockMessage(BlockReason reason) {
+
+        return switch (reason) {
+            case POWERED_SUSPICIOUS ->
+                    Text.translatable("blockshelfitemstealing.message.blocked.inv_steal").copy();
+
+            case POWERED ->
+                    Text.translatable("blockshelfitemstealing.message.blocked.powered").copy();
+
+            case NORMAL ->
+                    Text.translatable("blockshelfitemstealing.message.blocked").copy();
+        };
     }
 
     private static void sendCooldownMessage(PlayerEntity player, Text message) {
+
         long now = System.currentTimeMillis();
-        if (now - lastMessageTime > COOLDOWN_MS) {
-            MinecraftClient.getInstance().inGameHud.setOverlayMessage(message, false);
-            lastMessageTime = now;
+
+        if (now - lastMessageTime <= COOLDOWN_MS) {
+            return;
         }
+
+        MinecraftClient.getInstance()
+                .inGameHud
+                .setOverlayMessage(message, false);
+
+        lastMessageTime = now;
     }
 }
