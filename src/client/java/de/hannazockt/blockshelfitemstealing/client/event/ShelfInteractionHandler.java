@@ -76,7 +76,7 @@ public class ShelfInteractionHandler implements UseBlockCallback {
             return false;
         }
 
-						// Check if 3 powered shelfs are besides each other to check if it would steal your entire hotbar
+						// Check if 3 powered shelves are next to each other to check if it would steal your entire hotbar
         boolean isSuspicious = ShelfDetector.isSuspiciousShelfSystem(world, pos);
 
         BlockReason reason = determineReason(isPowered, isSuspicious);
